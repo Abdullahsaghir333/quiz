@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Class 9 Quiz</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 40px auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+    }
+
+    #setup, #quiz, #result {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    #setup:hover, #quiz:hover, #result:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 18px;
+      color: #333;
+      font-weight: 500;
+      font-size: 1.05rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      margin-top: 8px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f9f9f9;
+    }
+
+    input:focus, select:focus {
+      border-color: #66a6ff;
+      box-shadow: 0 0 8px rgba(102, 166, 255, 0.6);
+      outline: none;
+      background-color: #fff;
+    }
+
+    button {
+      background: linear-gradient(to right, #4776E6, #8E54E9);
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #3661D0, #7B46D3);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    /* Quiz question styling */
+    #quiz h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+
+    #quiz label {
+      background-color: #f5f5f5;
+      padding: 12px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid transparent;
+    }
+
+    #quiz label:hover {
+      background-color: #e9f0ff;
+      border-color: #b3d1ff;
+    }
+
+    #quiz input[type="radio"] {
+      margin-right: 10px;
+      width: auto;
+    }
+
+    /* Results page styling */
+    #result {
+      text-align: center;
+    }
+
+    #result h2 {
+      color: #4776E6;
+      margin-bottom: 20px;
+    }
+
+    #result p {
+      font-size: 1.1rem;
+      margin: 10px 0;
+    }
+
+    #result .score {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #333;
+      margin: 20px 0;
+      padding: 10px;
+      background-color: #e9f0ff;
+      border-radius: 8px;
+    }
+
+    /* Responsiveness */
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;
+        padding: 15px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      button {
+        padding: 12px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Class 9 Quiz</h1>
+
+    <div id="setup">
+      <label>
+        Student Name:
+        <input type="text" id="studentName" required placeholder="Enter your full name">
+      </label>
+      
+      <label>
+        Email:
+        <input type="email" id="studentEmail" required placeholder="your.email@example.com">
+      </label>
+      
+      <label>
+        Phone:
+        <input type="tel" id="studentPhone" required placeholder="Your contact number">
+      </label>
+      
+      <label>
+        Class:
+        <select id="studentClass" required>
+          <option value="">Select Your Class</option>
+          <option value="9A">9A</option>
+          <option value="9B">9B</option>
+          <option value="9C">9C</option>
+          <option value="9D">9D</option>
+        </select>
+      </label>
+      
+      <label>
+        Subject:
+        <select id="subject" required>
+          <option value="Physics">Physics</option>
+          <option value="Math">Math</option>
+        </select>
+      </label>
+      
+      <label>
+        Difficulty:
+        <select id="difficulty" required>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </label>
+      
+      <label>
+        Number of Questions:
+        <select id="questionCount" required>
+          <option value="5">5 Questions</option>
+          <option value="10" selected>10 Questions</option>
+          <option value="15">15 Questions</option>
+          <option value="20">20 Questions</option>
+        </select>
+      </label>
+      
+      <button onclick="startQuiz()">Start Quiz</button>
+    </div>
+
+    <div id="quiz" style="display: none;"></div>
+    <div id="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    const API_BASE_URL = "https://script.google.com/macros/s/AKfycby-EtEWN-KaJCYaRjgYw1jJ9lZ7SJc5JveAOAqNMHZM4AznGp_3GFniOIiPZdjzsZ01Kw/exec";
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+
+    function startQuiz() {
+      const name = document.getElementById("studentName").value.trim();
+      const email = document.getElementById("studentEmail").value.trim();
+      const phone = document.getElementById("studentPhone").value.trim();
+      const studentClass = document.getElementById("studentClass").value;
+      const subject = document.getElementById("subject").value;
+      const difficulty = document.getElementById("difficulty").value;
+      const questionCount = document.getElementById("questionCount").value;
+
+      if (!name || !email || !phone || !studentClass) {
+        alert("Please fill in all required fields.");
+        return;
+      }
+
+      fetch(`${API_BASE_URL}?action=getQuestions&subject=${subject}&difficulty=${difficulty}&count=${questionCount}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.error) {
+            alert(data.error);
+            return;
+          }
+
+          currentQuestions = data;
+          
+          // If the API returns more questions than requested, trim the array
+          if (currentQuestions.length > questionCount) {
+            currentQuestions = currentQuestions.slice(0, questionCount);
+          }
+          
+          currentIndex = 0;
+          score = 0;
+
+          document.getElementById("setup").style.display = "none";
+          document.getElementById("quiz").style.display = "block";
+          document.getElementById("result").style.display = "none";
+
+          showQuestion();
+        })
+        .catch(error => {
+          console.error("Error fetching questions:", error);
+          alert("There was an error loading the quiz questions. Please try again.");
+        });
+    }
+
+    function showQuestion() {
+      const question = currentQuestions[currentIndex];
+      const quizDiv = document.getElementById("quiz");
+
+      let html = `
+        <h2>Q${currentIndex + 1}: ${question.question}</h2>
+        <p>Question ${currentIndex + 1} of ${currentQuestions.length}</p>
+      `;
+      
+      question.options.forEach((opt, index) => {
+        html += `
+          <label>
+            <input type="radio" name="option" value="${opt.label}">
+            ${opt.text}
+          </label><br>`;
+      });
+
+      html += `<br><button onclick="submitAnswer()">Next</button>`;
+      quizDiv.innerHTML = html;
+    }
+
+    function submitAnswer() {
+      const selected = document.querySelector('input[name="option"]:checked');
+      if (!selected) {
+        alert("Please select an option.");
+        return;
+      }
+
+      const question = currentQuestions[currentIndex];
+      if (selected.value === question.correctOption) {
+        score++;
+      }
+
+      currentIndex++;
+      if (currentIndex < currentQuestions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("quiz").style.display = "none";
+
+      const name = document.getElementById("studentName").value;
+      const email = document.getElementById("studentEmail").value;
+      const phone = document.getElementById("studentPhone").value;
+      const studentClass = document.getElementById("studentClass").value;
+      const subject = document.getElementById("subject").value;
+      const difficulty = document.getElementById("difficulty").value;
+      const questionCount = document.getElementById("questionCount").value;
+
+      const resultDiv = document.getElementById("result");
+      const percentage = ((score / currentQuestions.length) * 100).toFixed(1);
+      
+      resultDiv.innerHTML = `
+        <h2>Quiz Completed!</h2>
+        <p>Student: ${name}</p>
+        <p>Class: ${studentClass}</p>
+        <p>Subject: ${subject} (${difficulty})</p>
+        <div class="score">
+          Score: ${score} out of ${currentQuestions.length} (${percentage}%)
+        </div>
+        <button onclick="location.reload()">Try Again</button>
+      `;
+      resultDiv.style.display = "block";
+
+      // Submit result to Google Sheet with all student information
+      const url = `${API_BASE_URL}?action=submitResult&subject=${encodeURIComponent(subject)}&difficulty=${encodeURIComponent(difficulty)}&name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}&phone=${encodeURIComponent(phone)}&class=${encodeURIComponent(studentClass)}&score=${score}&total=${currentQuestions.length}`;
+      
+      fetch(url)
+        .catch(error => {
+          console.error("Error submitting results:", error);
+        });
+    }
+  </script>
+</body>
+</html>

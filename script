@@ -1,0 +1,90 @@
+function getSheetName(subject, difficulty) {
+  const mapping = {
+    "Physics": {
+      "Easy": "9TH_PHYSICS_EASY",
+      "Medium": "9TH_PHYSICS_MEDIUM",
+      "Hard": "9TH_PHYSICS_HARD"
+    },
+    "Math": {
+      "Easy": "9TH_MATH_EASY",
+      "Medium": "9TH_MATH_MEDIUM",
+      "Hard": "9TH_MATH_HARD"
+    }
+    // Add more subjects/difficulties if needed
+  };
+  return mapping[subject] && mapping[subject][difficulty]
+    ? mapping[subject][difficulty]
+    : null;
+}
+
+//  Get questions from sheet
+function getQuizQuestions(subject, difficulty) {
+  const sheetName = getSheetName(subject, difficulty);
+  if (!sheetName) return { error: "Invalid subject or difficulty" };
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  if (!sheet) return { error: "Sheet not found: " + sheetName };
+  const data = sheet.getDataRange().getValues();
+  const questions = [];
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    questions.push({
+      question: row[0], // Column A
+      options: [
+        { label: "Option1", text: row[1] }, // Column B
+        { label: "Option2", text: row[2] }, // C
+        { label: "Option3", text: row[3] }, // D
+        { label: "Option4", text: row[4] }  // E
+      ],
+      correctOption: row[5] // e.g., "Option1"
+    });
+  }
+  return questions;
+}
+
+function storeQuizResult(subject, difficulty, studentName, email, phone, studentClass, score, total, timestamp) {
+  const resultsSheetName = "Quiz_Results";  // fix to always use this sheet
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(resultsSheetName);
+  if (!sheet) {
+    // Create the results sheet if it doesn't exist and add headers
+    sheet = ss.insertSheet(resultsSheetName);
+    sheet.appendRow(["Timestamp", "Name", "Email", "Phone", "Class", "Subject", "Difficulty", "NumQuestions", "Score"]);
+  }
+  // Append the quiz result with all student information
+  sheet.appendRow([timestamp, studentName, email, phone, studentClass, subject, difficulty, total, score]);
+  return { success: true };
+}
+
+//  Web endpoint for frontend
+function doGet(e) {
+  const action = e.parameter.action;
+  if (action === "getQuestions") {
+    const subject = e.parameter.subject;
+    const difficulty = e.parameter.difficulty;
+    return ContentService
+      .createTextOutput(JSON.stringify(getQuizQuestions(subject, difficulty)))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  
+  if (action === "submitResult") {
+    const subject = e.parameter.subject;
+    const difficulty = e.parameter.difficulty;
+    const name = e.parameter.name;
+    const email = e.parameter.email || ""; // Handle optional fields 
+    const phone = e.parameter.phone || "";
+    const studentClass = e.parameter.class || "";
+    const score = e.parameter.score;
+    const total = e.parameter.total;
+    const timestamp = new Date().toLocaleString();
+    
+    return ContentService
+      .createTextOutput(JSON.stringify(
+        storeQuizResult(subject, difficulty, name, email, phone, studentClass, score, total, timestamp)
+      ))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  
+  return ContentService
+    .createTextOutput(JSON.stringify({ error: "Invalid action" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
